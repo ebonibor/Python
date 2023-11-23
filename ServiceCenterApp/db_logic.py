@@ -56,10 +56,22 @@ def delete_client(client_id):
     conn = connect()
     cursor = conn.cursor()
     try:
-        cursor.execute("DELETE FROM clients WHERE id = %s", (client_id,))
+        cursor.execute('DELETE FROM "Client" WHERE "ClientID" = %s', (client_id,))
         conn.commit()
     except psycopg2.Error as e:
         print("Ошибка при удалении клиента:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
+def add_order(client_id, employee_id, service_id, date):
+    conn = connect()
+    cursor = conn.cursor()
+    try:
+        cursor.execute('INSERT INTO "Order" ("ClientID", "EmployeeID", "ServiceID", "OrderDate") VALUES (%s, %s, %s, %s)', (client_id, employee_id, service_id, date))
+        conn.commit()
+    except psycopg2.Error as e:
+        print("Ошибка при добавлении заказа:", e)
     finally:
         cursor.close()
         conn.close()
